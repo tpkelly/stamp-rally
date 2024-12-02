@@ -1,0 +1,5 @@
+{
+  "clientId":"<Discord Client ID>",
+  "clientSecret":"<Discord Client Secret>",
+  "discord":"<Discord Bot Token>"
+}

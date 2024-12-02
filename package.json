@@ -1,0 +1,14 @@
+{
+  "name": "StampRallu",
+  "version": "0.1.0",
+  "description": "Custom bot for Christmas Stamp Rally",
+  "main": "bot.js",
+  "author": "Kazenone Alagar",
+  "dependencies": {
+    "discord.js": "^14.12.1"
+  },
+  "scripts": {
+    "start": "node bot.js",
+    "start-prod": "pm2 start bot.js -o ../logs/stamps.log -e ../logs/stamps.err.log --time --name stamps"
+  }
+}

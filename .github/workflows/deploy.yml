@@ -1,0 +1,66 @@
+name: Build and deploy to Live server
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+        matrix:
+            node-version: [20.x]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - run: npm install
+
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0.4.0'
+        with:
+          workload_identity_provider: 'projects/$GC_PROJECT_NUMBER/locations/global/workloadIdentityPools/$GC_INSTANCE/providers/$GC_PROVIDER'
+          service_account: '$GC_SERVICE_USER@$GC_PROJECT.iam.gserviceaccount.com'
+     
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DEPLOYMENT_PRIVATE_KEY }}
+          known_hosts: 'placeholder'
+
+      - name: Set up SSH Known Host
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} -p ${{ secrets.SSH_PORT }} >> ~/.ssh/known_hosts
+
+      - name: Create auth file
+        run: |
+          echo $AUTH_FILE >> ./auth.json
+        shell: bash
+        env:
+          AUTH_FILE: ${{ secrets.JSON_AUTH }}
+
+      - name: Deploy
+        run: rsync -avz ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/deploy/stamps/
+
+      - name: Restart Bot
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.DEPLOYMENT_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/deploy/stamps/
+            pm2 stop stamps
+            git fetch origin master
+            git reset --hard FETCH_HEAD
+            git clean -d -f
+            npm install --omit=dev
+            npm run start-prod

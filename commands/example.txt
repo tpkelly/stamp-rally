@@ -1,0 +1,16 @@
+const { ApplicationCommandOptionType } = require('discord.js');
+
+module.exports = {
+  name: '',
+  description: '',
+  options: [
+    { type: ApplicationCommandOptionType.Integer, name: "", description: "" }
+  ],
+  ephemeral: trueOrFalse,
+  
+  executeInteraction: async(interaction) => {
+    // Some logic here
+    var content = "example text"
+    interaction.editReply({ content: content });
+  }
+};

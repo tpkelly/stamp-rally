@@ -5,7 +5,8 @@
   "main": "bot.js",
   "author": "Kazenone Alagar",
   "dependencies": {
-    "discord.js": "^14.12.1"
+    "discord.js": "^14.12.1",
+    "mongodb": "^5.8.0"
   },
   "scripts": {
     "start": "node bot.js",

@@ -1,5 +1,4 @@
 const { ApplicationCommandOptionType, AttachmentBuilder } = require('discord.js');
-const common = require('../common.js');
 const fs = require('fs');
 
 module.exports = {
@@ -11,8 +10,12 @@ module.exports = {
   executeInteraction: async(interaction) => {
     var user = interaction.options.getUser('user') ?? interaction.user;
     
-    // TODO: Actually work out which stamps they have
-    var stampNum = Math.floor(Math.random() * 16)
+    var stampNum = 0
+    
+    var doc = await interaction.client.mongo.collection('stamps').findOne({ _id: user.id });
+    if (doc) {
+      stampNum = doc.value
+    }
 
     fs.readFile(`./assets/${stampNum}.png`, function read(err, data) {
       if (err) { throw err; }

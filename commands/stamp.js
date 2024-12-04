@@ -1,15 +1,13 @@
 const { ApplicationCommandOptionType, AttachmentBuilder } = require('discord.js');
 const fs = require('fs');
 
-const VENUE_ONE = 8
-const VENUE_TWO = 4
-const VENUE_THREE = 2
-const VENUE_FOUR = 1
+const STEPS = { value: 8, name: 'The First Steps' }
+const TRIBE = { value: 4, name: 'Tribe' }
+const VIMAA = { value: 2, name: 'Vivaa Vimaa' }
+const RAIDERS = { value: 1, name: "The Raider's Retreat" }
 
 const stampers = {
-  '189456522630266880': { value: VENUE_ONE, name: 'Venue One' },
-  '181499334855098379': { value: VENUE_TWO, name: 'Venue Two' },
-  '855131514593083412': { value: VENUE_THREE, name: 'Venue Three' }
+  '53547160494407680': TRIBE,
 }
 
 module.exports = {

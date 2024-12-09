@@ -7,7 +7,12 @@ const VIMAA = { value: 2, name: 'Vivaa Vimaa' }
 const RAIDERS = { value: 1, name: "The Raider's Retreat" }
 
 const stampers = {
-  '53547160494407680': TRIBE,
+  '287948876244320256': VIMAA, // Escher
+  '53547160494407680': TRIBE, // Phoe
+  '855131514593083412': RAIDERS, // Kayla
+  '274223399872626689': STEPS, // Akiko
+  '99593441855438848': STEPS, // Cynthia
+  '355666055760183317': STEPS, // Mis'to
 }
 
 module.exports = {

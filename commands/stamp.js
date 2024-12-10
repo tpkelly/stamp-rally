@@ -5,6 +5,7 @@ const STEPS = { value: 8, name: 'The First Steps' }
 const TRIBE = { value: 4, name: 'Tribe' }
 const VIMAA = { value: 2, name: 'Vivaa Vimaa' }
 const RAIDERS = { value: 1, name: "The Raider's Retreat" }
+const FLEX = {}
 
 const stampers = {
   '287948876244320256': VIMAA, // Escher
@@ -13,6 +14,8 @@ const stampers = {
   '274223399872626689': STEPS, // Akiko
   '99593441855438848': STEPS, // Cynthia
   '355666055760183317': STEPS, // Mis'to
+  '189456522630266880': FLEX, // Koi
+  '272402154982080512': FLEX, // Hoth
 }
 
 module.exports = {
@@ -25,12 +28,26 @@ module.exports = {
     var user = interaction.options.getUser('user');
     var stamper = interaction.user;
     
-    if (!stampers[stamper.id]) {
+    var stamperValue = stampers[stamper.id];
+    if (stamperValue === FLEX) {
+      var date = new Date(Date.now() - 12*60*60*1000)
+      switch(date.getDay()) {
+        case 1: stamperValue = STEPS;
+          break;
+        case 4: stamperValue = TRIBE;
+          break;
+        case 5: stamperValue = VIMAA;
+          break;
+        case 6: stamperValue = RAIDERS;
+          break;
+        default: stamperValue = undefined;
+      }
+    }
+    
+    if (!stamperValue) {
       interaction.editReply({ content: "Sorry, you are not one of the registered stampers! Be sure to visit venues and collect stamps" });
       return;
     }
-    
-    var stamperValue = stampers[stamper.id];
     
     var doc = await interaction.client.mongo.collection('stamps').findOne({ _id: user.id });
     if (!doc) {

@@ -22,14 +22,38 @@ client.once('ready', async () => {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
     
+    if (command.guildCommand) {
+      // Register guild application slash commands
+      var guild = client.guilds.resolve('1313256615763382312');
+
+      if (guild)
+      {
+        var newCommand = await guild.commands.create({
+          name: command.name,
+          description: command.description,
+          options: command.options,
+          type: command.type || ApplicationCommandType.ChatInput,
+        });
+        
+//        await fetch(`https://discord.com/api/v10/applications/${client.application.id}/guilds/1313256615763382312/commands/${newCommand.id}/permissions`, {
+//            method: 'POST',
+//            headers: { Authentication: `Bearer ${token.access_token}` },
+//            body: {
+//              permissions: guildConfig.adminRoles.map(x => ({ id: x, type: /* Role */ 1, permission: true }))
+//            }
+//          });
+      }
+    }
+    else {
     // Register application slash commands
-    client.application.commands.create({
-      name: command.name,
-      description: command.description,
-      options: command.options,
-      type: command.type || ApplicationCommandType.ChatInput,
-      defaultPermission: true,
-    });
+      client.application.commands.create({
+        name: command.name,
+        description: command.description,
+        options: command.options,
+        type: command.type || ApplicationCommandType.ChatInput,
+        defaultPermission: true,
+      });
+    }
   }
   
   // Register event handlers
